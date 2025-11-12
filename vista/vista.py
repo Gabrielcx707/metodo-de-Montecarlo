@@ -64,6 +64,13 @@ class VistaMonteCarlo:
         ttk.Label(left_frame, text="Ejemplo: x**2, math.sin(x), math.exp(x)", 
                  font=("Arial", 8)).pack(anchor=tk.W, padx=5)
         
+        # Frame para botones de funciones matemáticas
+        func_buttons_frame = ttk.Frame(left_frame)
+        func_buttons_frame.pack(pady=5, padx=5, fill=tk.X)
+        
+        # Crear botones de funciones matemáticas
+        self._crear_botones_funciones(func_buttons_frame, self.func_1d)
+        
         # Límite a
         ttk.Label(left_frame, text="Límite inferior (a):").pack(anchor=tk.W, pady=5)
         self.a_1d = ttk.Entry(left_frame, width=30)
@@ -141,6 +148,13 @@ class VistaMonteCarlo:
         self.func_2d.insert(0, "x*y")
         ttk.Label(left_frame, text="Ejemplo: x*y, x**2 + y**2", 
                  font=("Arial", 8)).pack(anchor=tk.W, padx=5)
+        
+        # Frame para botones de funciones matemáticas
+        func_buttons_frame = ttk.Frame(left_frame)
+        func_buttons_frame.pack(pady=5, padx=5, fill=tk.X)
+        
+        # Crear botones de funciones matemáticas
+        self._crear_botones_funciones(func_buttons_frame, self.func_2d)
         
         # Límites X
         ttk.Label(left_frame, text="Intervalo X:", font=("Arial", 10, "bold")).pack(anchor=tk.W, pady=(10,5))
@@ -376,8 +390,68 @@ class VistaMonteCarlo:
         else:
             self.mostrar_error("Controlador no inicializado")
     
+    def _crear_botones_funciones(self, parent_frame, entry_widget):
+        """Crea los botones de funciones matemáticas"""
+        # Primera fila: funciones trigonométricas básicas
+        row1 = ttk.Frame(parent_frame)
+        row1.pack(fill=tk.X, pady=2)
+        
+        btn_cos = ttk.Button(row1, text="cos", width=8, 
+                            command=lambda: self._insertar_funcion(entry_widget, "math.cos("))
+        btn_cos.pack(side=tk.LEFT, padx=1, expand=True, fill=tk.X)
+        
+        btn_sin = ttk.Button(row1, text="sin", width=8,
+                            command=lambda: self._insertar_funcion(entry_widget, "math.sin("))
+        btn_sin.pack(side=tk.LEFT, padx=1, expand=True, fill=tk.X)
+        
+        btn_tan = ttk.Button(row1, text="tan", width=8,
+                            command=lambda: self._insertar_funcion(entry_widget, "math.tan("))
+        btn_tan.pack(side=tk.LEFT, padx=1, expand=True, fill=tk.X)
+        
+        # Segunda fila: funciones trigonométricas inversas
+        row2 = ttk.Frame(parent_frame)
+        row2.pack(fill=tk.X, pady=2)
+        
+        btn_arcsin = ttk.Button(row2, text="arcsin", width=8,
+                               command=lambda: self._insertar_funcion(entry_widget, "math.asin("))
+        btn_arcsin.pack(side=tk.LEFT, padx=1, expand=True, fill=tk.X)
+        
+        btn_arccos = ttk.Button(row2, text="arccos", width=8,
+                               command=lambda: self._insertar_funcion(entry_widget, "math.acos("))
+        btn_arccos.pack(side=tk.LEFT, padx=1, expand=True, fill=tk.X)
+        
+        btn_arctan = ttk.Button(row2, text="arctan", width=8,
+                               command=lambda: self._insertar_funcion(entry_widget, "math.atan("))
+        btn_arctan.pack(side=tk.LEFT, padx=1, expand=True, fill=tk.X)
+        
+        # Tercera fila: logaritmos
+        row3 = ttk.Frame(parent_frame)
+        row3.pack(fill=tk.X, pady=2)
+        
+        btn_log = ttk.Button(row3, text="log", width=8,
+                            command=lambda: self._insertar_funcion(entry_widget, "math.log10("))
+        btn_log.pack(side=tk.LEFT, padx=1, expand=True, fill=tk.X)
+        
+        btn_ln = ttk.Button(row3, text="ln", width=8,
+                           command=lambda: self._insertar_funcion(entry_widget, "math.log("))
+        btn_ln.pack(side=tk.LEFT, padx=1, expand=True, fill=tk.X)
+    
+    def _insertar_funcion(self, entry_widget, funcion):
+        """Inserta una función matemática en el Entry en la posición del cursor"""
+        cursor_pos = entry_widget.index(tk.INSERT)
+        texto_actual = entry_widget.get()
+        nuevo_texto = texto_actual[:cursor_pos] + funcion + texto_actual[cursor_pos:]
+        entry_widget.delete(0, tk.END)
+        entry_widget.insert(0, nuevo_texto)
+        # Mover el cursor después de la función insertada
+        nueva_pos = cursor_pos + len(funcion)
+        entry_widget.icursor(nueva_pos)
+        entry_widget.focus_set()
+    
     def ejecutar(self):
         """Inicia la aplicación (ya está ejecutándose si se pasó root)"""
         if self.controlador:
             # Si se creó desde el controlador, iniciar mainloop
             self.root.mainloop()
+
+#print("modificaciodo")

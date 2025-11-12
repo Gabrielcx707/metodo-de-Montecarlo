@@ -23,7 +23,7 @@ class MonteCarloCalculator:
                     y = 0
             suma += y
             
-            if i < 20:
+            if i < n:
                 puntos.append({"x": x, "y": y})
         
         integral = (b - a) * suma / n
@@ -47,7 +47,7 @@ class MonteCarloCalculator:
                     z = 0
             suma += z
             
-            if i < 20:
+            if i < n:
                 puntos.append({"x": x, "y": y, "z": z})
         
         area = (b - a) * (d - c)

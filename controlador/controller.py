@@ -103,7 +103,7 @@ class ControladorMonteCarlo:
         for i, punto in enumerate(puntos[:10]):
             texto += f"   Punto {i+1}: x = {punto['x']:.4f}, f(x) = {punto['y']:.4f}\n"
         if len(puntos) > 10:
-            texto += f"   ... y {n-10} puntos más\n\n"
+            texto += f"   ... y {len(puntos)-10} puntos más\n\n"
         
         texto += f"📈 EXPLICACIÓN DEL MÉTODO:\n"
         texto += f"   1. Se generan {n:,} puntos xᵢ aleatorios en [{a}, {b}]\n"
@@ -138,8 +138,7 @@ class ControladorMonteCarlo:
         for i, punto in enumerate(puntos[:10]):
             texto += f"   Punto {i+1}: x = {punto['x']:.3f}, y = {punto['y']:.3f}, f(x,y) = {punto['z']:.4f}\n"
         if len(puntos) > 10:
-            texto += f"   ... y {n-10} puntos más \n\n"
-           # texto += "dio " 
+            texto += f"   ... y {len(puntos)-10} puntos más \n\n"
         texto += f"📈 EXPLICACIÓN DEL MÉTODO 2D:\n"
         texto += f"   1. Se generan {n:,} puntos (xᵢ,yᵢ) en el rectángulo\n"
         texto += f"   2. Se evalúa f(xᵢ,yᵢ) en cada punto\n"

@@ -19,6 +19,15 @@ class VistaMonteCarlo:
             self.root = tk.Tk()
             self.controlador = root_or_controlador
         
+        self.font_label = ("Arial", 14)
+        self.font_label2 = ("Arial", 12)
+        self.font_entry = ("Arial", 13)
+        self.font_entry2 = ("Arial", 11)
+        # Crear estilo para los botones de funciones matemáticas
+        estilo_func = ttk.Style()
+        # Nombre del estilo: "BotonFunc.TButton"
+        estilo_func.configure("BotonFunc.TButton", font=("Arial", 12))
+
         self.root.title("Simulación Monte Carlo - Integrales")
         self.root.geometry("1200x800")
         
@@ -54,15 +63,15 @@ class VistaMonteCarlo:
         
         # Título
         ttk.Label(left_frame, text="Integral Simple ∫f(x)dx", 
-                 font=("Arial", 14, "bold")).pack(pady=10)
+                font=("Arial", 15, "bold")).pack(pady=10)
         
         # Función
-        ttk.Label(left_frame, text="Función f(x):").pack(anchor=tk.W, pady=5)
-        self.func_1d = ttk.Entry(left_frame, width=30)
+        ttk.Label(left_frame, text="Función f(x):", font=self.font_label).pack(anchor=tk.W, pady=5)
+        self.func_1d = ttk.Entry(left_frame, width=30, font=self.font_entry)
         self.func_1d.pack(pady=5, padx=5, fill=tk.X)
         self.func_1d.insert(0, "x**2")
         ttk.Label(left_frame, text="Ejemplo: x**2, math.sin(x), math.exp(x)", 
-                 font=("Arial", 8)).pack(anchor=tk.W, padx=5)
+                font=("Arial", 10)).pack(anchor=tk.W, padx=5)
         
         # Frame para botones de funciones matemáticas
         func_buttons_frame = ttk.Frame(left_frame)
@@ -72,41 +81,41 @@ class VistaMonteCarlo:
         self._crear_botones_funciones(func_buttons_frame, self.func_1d)
         
         # Límite a
-        ttk.Label(left_frame, text="Límite inferior (a):").pack(anchor=tk.W, pady=5)
-        self.a_1d = ttk.Entry(left_frame, width=30)
+        ttk.Label(left_frame, text="Límite inferior (a):", font=self.font_label).pack(anchor=tk.W, pady=5)
+        self.a_1d = ttk.Entry(left_frame, width=30, font=self.font_entry)
         self.a_1d.pack(pady=5, padx=5, fill=tk.X)
         self.a_1d.insert(0, "0")
         
         # Límite b
-        ttk.Label(left_frame, text="Límite superior (b):").pack(anchor=tk.W, pady=5)
-        self.b_1d = ttk.Entry(left_frame, width=30)
+        ttk.Label(left_frame, text="Límite superior (b):", font=self.font_label).pack(anchor=tk.W, pady=5)
+        self.b_1d = ttk.Entry(left_frame, width=30, font=self.font_entry)
         self.b_1d.pack(pady=5, padx=5, fill=tk.X)
         self.b_1d.insert(0, "1")
         
         # Número de puntos
-        ttk.Label(left_frame, text="Número de puntos (N):").pack(anchor=tk.W, pady=5)
-        self.n_1d = ttk.Entry(left_frame, width=30)
+        ttk.Label(left_frame, text="Número de puntos (N):", font=self.font_label).pack(anchor=tk.W, pady=5)
+        self.n_1d = ttk.Entry(left_frame, width=30, font=self.font_entry)
         self.n_1d.pack(pady=5, padx=5, fill=tk.X)
         self.n_1d.insert(0, "10000")
         
         # Botón calcular
-        self.btn_calcular_1d = ttk.Button(left_frame, text="Calcular", 
-                                         command=self._calcular_1d)
+        self.btn_calcular_1d = ttk.Button(left_frame, text="Calcular", style="BotonFunc.TButton",
+                                        command=self._calcular_1d)
         self.btn_calcular_1d.pack(pady=20, padx=5, fill=tk.X)
         
         # Botones de ejemplo
-        ttk.Label(left_frame, text="Ejemplos:", font=("Arial", 10, "bold")).pack(pady=(20,5))
+        ttk.Label(left_frame, text="Ejemplos:", font=("Arial", 12, "bold")).pack(pady=(20,5))
         
-        self.btn_ej1_1d = ttk.Button(left_frame, text="Ejemplo 1: x² en [0,1]", 
-                                   command=lambda: self._cargar_ejemplo_1d("x**2", 0, 1, 10000))
+        self.btn_ej1_1d = ttk.Button(left_frame, text="Ejemplo 1: x² en [0,1]", style="BotonFunc.TButton",
+                                command=lambda: self._cargar_ejemplo_1d("x**2", 0, 1, 10000))
         self.btn_ej1_1d.pack(pady=2, padx=5, fill=tk.X)
         
-        self.btn_ej2_1d = ttk.Button(left_frame, text="Ejemplo 2: sin(x) en [0,π]", 
-                                   command=lambda: self._cargar_ejemplo_1d("math.sin(x)", 0, math.pi, 10000))
+        self.btn_ej2_1d = ttk.Button(left_frame, text="Ejemplo 2: sin(x) en [0,π]", style="BotonFunc.TButton",
+                                command=lambda: self._cargar_ejemplo_1d("math.sin(x)", 0, math.pi, 10000))
         self.btn_ej2_1d.pack(pady=2, padx=5, fill=tk.X)
         
-        self.btn_ej3_1d = ttk.Button(left_frame, text="Ejemplo 3: eˣ en [0,1]", 
-                                   command=lambda: self._cargar_ejemplo_1d("math.exp(x)", 0, 1, 10000))
+        self.btn_ej3_1d = ttk.Button(left_frame, text="Ejemplo 3: eˣ en [0,1]", style="BotonFunc.TButton",
+                                command=lambda: self._cargar_ejemplo_1d("math.exp(x)", 0, 1, 10000))
         self.btn_ej3_1d.pack(pady=2, padx=5, fill=tk.X)
         
         # Frame derecho - Gráfico y resultados
@@ -122,9 +131,9 @@ class VistaMonteCarlo:
         result_frame.pack(fill=tk.BOTH, expand=True, pady=5)
         
         self.texto_resultados_1d = scrolledtext.ScrolledText(result_frame, 
-                                                             height=15, 
-                                                             wrap=tk.WORD,
-                                                             font=("Courier", 9))
+                                                            height=15, 
+                                                            wrap=tk.WORD,
+                                                            font=("Courier", 12))
         self.texto_resultados_1d.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
         
         # Frame para el gráfico (se creará cuando se calcule)
@@ -139,15 +148,15 @@ class VistaMonteCarlo:
         
         # Título
         ttk.Label(left_frame, text="Integral Doble ∬f(x,y)dxdy", 
-                 font=("Arial", 14, "bold")).pack(pady=10)
+                font=("Arial", 15, "bold")).pack(pady=7)
         
         # Función
-        ttk.Label(left_frame, text="Función f(x,y):").pack(anchor=tk.W, pady=5)
-        self.func_2d = ttk.Entry(left_frame, width=30)
+        ttk.Label(left_frame, text="Función f(x,y):", font=self.font_label2).pack(anchor=tk.W, pady=5)
+        self.func_2d = ttk.Entry(left_frame, width=30, font=self.font_entry2)
         self.func_2d.pack(pady=5, padx=5, fill=tk.X)
         self.func_2d.insert(0, "x*y")
         ttk.Label(left_frame, text="Ejemplo: x*y, x**2 + y**2", 
-                 font=("Arial", 8)).pack(anchor=tk.W, padx=5)
+                font=("Arial", 11)).pack(anchor=tk.W, padx=5)
         
         # Frame para botones de funciones matemáticas
         func_buttons_frame = ttk.Frame(left_frame)
@@ -157,49 +166,49 @@ class VistaMonteCarlo:
         self._crear_botones_funciones(func_buttons_frame, self.func_2d)
         
         # Límites X
-        ttk.Label(left_frame, text="Intervalo X:", font=("Arial", 10, "bold")).pack(anchor=tk.W, pady=(10,5))
-        ttk.Label(left_frame, text="Límite inferior (ax):").pack(anchor=tk.W, pady=2)
-        self.ax_2d = ttk.Entry(left_frame, width=30)
+        ttk.Label(left_frame, text="Intervalo X:", font=("Arial", 13, "bold")).pack(anchor=tk.W, pady=(10,5))
+        ttk.Label(left_frame, text="Límite inferior (ax):", font=self.font_label2).pack(anchor=tk.W, pady=2)
+        self.ax_2d = ttk.Entry(left_frame, width=30, font=self.font_entry2)
         self.ax_2d.pack(pady=2, padx=5, fill=tk.X)
         self.ax_2d.insert(0, "0")
         
-        ttk.Label(left_frame, text="Límite superior (bx):").pack(anchor=tk.W, pady=2)
-        self.bx_2d = ttk.Entry(left_frame, width=30)
+        ttk.Label(left_frame, text="Límite superior (bx):", font=self.font_label2).pack(anchor=tk.W, pady=2)
+        self.bx_2d = ttk.Entry(left_frame, width=30, font=self.font_entry2)
         self.bx_2d.pack(pady=2, padx=5, fill=tk.X)
         self.bx_2d.insert(0, "1")
         
         # Límites Y
-        ttk.Label(left_frame, text="Intervalo Y:", font=("Arial", 10, "bold")).pack(anchor=tk.W, pady=(10,5))
-        ttk.Label(left_frame, text="Límite inferior (cy):").pack(anchor=tk.W, pady=2)
-        self.cy_2d = ttk.Entry(left_frame, width=30)
+        ttk.Label(left_frame, text="Intervalo Y:", font=("Arial", 13, "bold")).pack(anchor=tk.W, pady=(10,5))
+        ttk.Label(left_frame, text="Límite inferior (cy):", font=self.font_label2).pack(anchor=tk.W, pady=2)
+        self.cy_2d = ttk.Entry(left_frame, width=30, font=self.font_entry2)
         self.cy_2d.pack(pady=2, padx=5, fill=tk.X)
         self.cy_2d.insert(0, "0")
         
-        ttk.Label(left_frame, text="Límite superior (dy):").pack(anchor=tk.W, pady=2)
-        self.dy_2d = ttk.Entry(left_frame, width=30)
+        ttk.Label(left_frame, text="Límite superior (dy):", font=self.font_label2).pack(anchor=tk.W, pady=2)
+        self.dy_2d = ttk.Entry(left_frame, width=30, font=self.font_entry2)
         self.dy_2d.pack(pady=2, padx=5, fill=tk.X)
         self.dy_2d.insert(0, "1")
         
         # Número de puntos
-        ttk.Label(left_frame, text="Número de puntos (N):").pack(anchor=tk.W, pady=5)
-        self.n_2d = ttk.Entry(left_frame, width=30)
+        ttk.Label(left_frame, text="Número de puntos (N):", font=self.font_label).pack(anchor=tk.W, pady=5)
+        self.n_2d = ttk.Entry(left_frame, width=30, font=self.font_entry2)
         self.n_2d.pack(pady=5, padx=5, fill=tk.X)
         self.n_2d.insert(0, "10000")
         
         # Botón calcular
-        self.btn_calcular_2d = ttk.Button(left_frame, text="Calcular", 
-                                         command=self._calcular_2d)
-        self.btn_calcular_2d.pack(pady=20, padx=5, fill=tk.X)
+        self.btn_calcular_2d = ttk.Button(left_frame, text="Calcular", style="BotonFunc.TButton", 
+                                        command=self._calcular_2d)
+        self.btn_calcular_2d.pack(pady=2, padx=5, fill=tk.X)
         
         # Botones de ejemplo
-        ttk.Label(left_frame, text="Ejemplos:", font=("Arial", 10, "bold")).pack(pady=(20,5))
+        ttk.Label(left_frame, text="Ejemplos:", font=("Arial", 12, "bold")).pack(pady=(5))
         
-        self.btn_ej1_2d = ttk.Button(left_frame, text="Ejemplo 1: x*y en [0,1]×[0,1]", 
-                                   command=lambda: self._cargar_ejemplo_2d("x*y", 0, 1, 0, 1, 10000))
+        self.btn_ej1_2d = ttk.Button(left_frame, text="Ejemplo 1: x*y en [0,1]×[0,1]", style="BotonFunc.TButton",
+                                command=lambda: self._cargar_ejemplo_2d("x*y", 0, 1, 0, 1, 10000))
         self.btn_ej1_2d.pack(pady=2, padx=5, fill=tk.X)
         
-        self.btn_ej2_2d = ttk.Button(left_frame, text="Ejemplo 2: x²+y² en [0,1]×[0,1]", 
-                                   command=lambda: self._cargar_ejemplo_2d("x**2 + y**2", 0, 1, 0, 1, 10000))
+        self.btn_ej2_2d = ttk.Button(left_frame, text="Ejemplo 2: x²+y² en [0,1]×[0,1]", style="BotonFunc.TButton",
+                                command=lambda: self._cargar_ejemplo_2d("x**2 + y**2", 0, 1, 0, 1, 10000))
         self.btn_ej2_2d.pack(pady=2, padx=5, fill=tk.X)
         
         # Frame derecho - Gráfico y resultados
@@ -215,9 +224,9 @@ class VistaMonteCarlo:
         result_frame.pack(fill=tk.BOTH, expand=True, pady=5)
         
         self.texto_resultados_2d = scrolledtext.ScrolledText(result_frame, 
-                                                             height=15, 
-                                                             wrap=tk.WORD,
-                                                             font=("Courier", 9))
+                                                            height=15, 
+                                                            wrap=tk.WORD,
+                                                            font=("Courier", 12))
         self.texto_resultados_2d.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
         
         # Frame para el gráfico (se creará cuando se calcule)
@@ -263,7 +272,7 @@ class VistaMonteCarlo:
             widget.destroy()
         
         # Crear nuevo gráfico
-        self.fig_1d, ax = plt.subplots(figsize=(6, 4))
+        self.fig_1d, ax = plt.subplots(figsize=(2, 3))
         
         # Generar puntos para la función
         x_vals = np.linspace(a, b, 200)
@@ -306,7 +315,7 @@ class VistaMonteCarlo:
             widget.destroy()
         
         # Crear nuevo gráfico
-        self.fig_2d = plt.figure(figsize=(6, 4))
+        self.fig_2d = plt.figure(figsize=(4, 4))
         ax = self.fig_2d.add_subplot(111, projection='3d')
         
         # Generar malla para la superficie
@@ -396,15 +405,15 @@ class VistaMonteCarlo:
         row1 = ttk.Frame(parent_frame)
         row1.pack(fill=tk.X, pady=2)
         
-        btn_cos = ttk.Button(row1, text="cos", width=8, 
+        btn_cos = ttk.Button(row1, text="cos", width=8, style="BotonFunc.TButton",
                             command=lambda: self._insertar_funcion(entry_widget, "math.cos("))
         btn_cos.pack(side=tk.LEFT, padx=1, expand=True, fill=tk.X)
         
-        btn_sin = ttk.Button(row1, text="sin", width=8,
+        btn_sin = ttk.Button(row1, text="sin", width=8, style="BotonFunc.TButton",
                             command=lambda: self._insertar_funcion(entry_widget, "math.sin("))
         btn_sin.pack(side=tk.LEFT, padx=1, expand=True, fill=tk.X)
         
-        btn_tan = ttk.Button(row1, text="tan", width=8,
+        btn_tan = ttk.Button(row1, text="tan", width=8, style="BotonFunc.TButton",
                             command=lambda: self._insertar_funcion(entry_widget, "math.tan("))
         btn_tan.pack(side=tk.LEFT, padx=1, expand=True, fill=tk.X)
         
@@ -412,28 +421,28 @@ class VistaMonteCarlo:
         row2 = ttk.Frame(parent_frame)
         row2.pack(fill=tk.X, pady=2)
         
-        btn_arcsin = ttk.Button(row2, text="arcsin", width=8,
-                               command=lambda: self._insertar_funcion(entry_widget, "math.asin("))
+        btn_arcsin = ttk.Button(row2, text="arcsin", width=8, style="BotonFunc.TButton",
+                            command=lambda: self._insertar_funcion(entry_widget, "math.asin("))
         btn_arcsin.pack(side=tk.LEFT, padx=1, expand=True, fill=tk.X)
         
-        btn_arccos = ttk.Button(row2, text="arccos", width=8,
-                               command=lambda: self._insertar_funcion(entry_widget, "math.acos("))
+        btn_arccos = ttk.Button(row2, text="arccos", width=8, style="BotonFunc.TButton",
+                            command=lambda: self._insertar_funcion(entry_widget, "math.acos("))
         btn_arccos.pack(side=tk.LEFT, padx=1, expand=True, fill=tk.X)
         
-        btn_arctan = ttk.Button(row2, text="arctan", width=8,
-                               command=lambda: self._insertar_funcion(entry_widget, "math.atan("))
+        btn_arctan = ttk.Button(row2, text="arctan", width=8, style="BotonFunc.TButton",
+                            command=lambda: self._insertar_funcion(entry_widget, "math.atan("))
         btn_arctan.pack(side=tk.LEFT, padx=1, expand=True, fill=tk.X)
         
         # Tercera fila: logaritmos
         row3 = ttk.Frame(parent_frame)
         row3.pack(fill=tk.X, pady=2)
         
-        btn_log = ttk.Button(row3, text="log", width=8,
+        btn_log = ttk.Button(row3, text="log", width=8, style="BotonFunc.TButton",
                             command=lambda: self._insertar_funcion(entry_widget, "math.log10("))
         btn_log.pack(side=tk.LEFT, padx=1, expand=True, fill=tk.X)
         
-        btn_ln = ttk.Button(row3, text="ln", width=8,
-                           command=lambda: self._insertar_funcion(entry_widget, "math.log("))
+        btn_ln = ttk.Button(row3, text="ln", width=8, style="BotonFunc.TButton",
+                        command=lambda: self._insertar_funcion(entry_widget, "math.log("))
         btn_ln.pack(side=tk.LEFT, padx=1, expand=True, fill=tk.X)
     
     def _insertar_funcion(self, entry_widget, funcion):

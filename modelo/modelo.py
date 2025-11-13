@@ -1,6 +1,7 @@
 import random
 import math
 import numpy as np
+import sympy as sp
 from typing import Tuple, List, Dict
 
 class MonteCarloCalculator:
@@ -73,15 +74,41 @@ class MonteCarloCalculator:
     def calcular_valor_exacto_1d(func_str: str, a: float, b: float) -> float:
         """Calcula valor exacto para funciones conocidas"""
         try:
-            if func_str == "x**2":
-                return (b**3 - a**3) / 3
-            elif func_str == "x":
-                return (b**2 - a**2) / 2
-            elif "math.sin(x)" in func_str:
-                return -math.cos(b) + math.cos(a)
-            elif "math.exp(x)" in func_str:
-                return math.exp(b) - math.exp(a)
-            else:
-                return None
+            # Definimos variable simbólica
+            x = sp.Symbol('x')
+
+            # Reemplazamos prefijos 'math.' por versiones de SymPy
+            reemplazos = {
+                # Trigonométricas básicas
+                "math.sin": "sin",
+                "math.cos": "cos",
+                "math.tan": "tan",
+                # Trigonométricas inversas
+                "math.asin": "asin",
+                "math.acos": "acos",
+                "math.atan": "atan",
+                # Exponencial y logarítmica
+                "math.exp": "exp",
+                "math.log": "ln",  # logaritmo natural
+                "math.log10": "(log(x)/log(10))", # logaritmo base 10 (clásico)
+                # Constantes
+                "math.pi": "pi",
+                "math.e": "E"
+            }
+
+            for k, v in reemplazos.items():
+                func_str = func_str.replace(k, v)
+
+            # Convertimos a expresión simbólica
+            func = sp.sympify(func_str)
+
+            # Integramos analíticamente
+            resultado = sp.integrate(func, (x, a, b))
+
+            # Simplificamos
+            resultado_simplificado = sp.simplify(resultado)
+
+            return float(resultado_simplificado.evalf())
+
         except:
             return None

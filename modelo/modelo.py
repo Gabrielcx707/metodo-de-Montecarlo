@@ -24,8 +24,7 @@ class MonteCarloCalculator:
                     y = 0
             suma += y
             
-            if i < n:
-                puntos.append({"x": x, "y": y})
+            puntos.append({"x": x, "y": y})
         
         integral = (b - a) * suma / n
         return integral, puntos
@@ -48,27 +47,11 @@ class MonteCarloCalculator:
                     z = 0
             suma += z
             
-            if i < n:
-                puntos.append({"x": x, "y": y, "z": z})
+            puntos.append({"x": x, "y": y, "z": z})
         
         area = (b - a) * (d - c)
         integral = area * suma / n
         return integral, puntos
-    
-    @staticmethod
-    def generar_puntos_funcion(func_str: str, a: float, b: float, num_puntos: int = 100) -> Tuple[List[float], List[float]]:
-        """Genera puntos para graficar la función"""
-        x_vals = np.linspace(a, b, num_puntos).tolist()
-        y_vals = []
-        
-        for x in x_vals:
-            try:
-                y = eval(func_str, {"x": x, "math": math, "np": np, "__builtins__": {}})
-                y_vals.append(y)
-            except:
-                y_vals.append(0)
-        
-        return x_vals, y_vals
     
     @staticmethod
     def calcular_valor_exacto_1d(func_str: str, a: float, b: float) -> float:

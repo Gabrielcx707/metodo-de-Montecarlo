@@ -1,28 +1,32 @@
+from modelo.modelo import MonteCarloCalculator
+from vista.vista import VistaMonteCarlo
+from vista.vista_1d import Vista1D
+from vista.vista_2d import Vista2D
+
 class ControladorMonteCarlo:
     """Controlador - Coordina Modelo y Vista"""
     
     def __init__(self, modelo=None, vista=None):
-        # Si no se pasan modelo y vista, crearlos
-        if modelo is None or vista is None:
-            import sys
-            import os
-            # Agregar el directorio padre al path para imports
-            sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-            from modelo.modelo import MonteCarloCalculator
-            from vista.vista import VistaMonteCarlo
-            
-            # Inicializar Modelo y Vista
-            self.modelo = MonteCarloCalculator() if modelo is None else modelo
-            self.vista = VistaMonteCarlo(self) if vista is None else vista
-        else:
-            self.modelo = modelo
-            self.vista = vista
+        # Inicializar Modelo y Vista si no se pasan
+        self.modelo = modelo if modelo else MonteCarloCalculator()
+        self.vista = vista if vista else VistaMonteCarlo(self)
+        
+        # Crear sub-vistas 1D y 2D dentro de la vista principal
+        self.vista_1d = Vista1D(
+            self.vista.frame_1d, 
+            self, 
+            crear_botones_funciones=self.vista._crear_botones_funciones
+            )
+        self.vista_1d._crear_interfaz_1d()
+        
+        self.vista_2d = Vista2D(self.vista.frame_2d, self, crear_botones_funciones=self.vista._crear_botones_funciones)
+        self.vista_2d._crear_interfaz_2d()
     
     def calcular_1d(self):
         """Maneja el cálculo de integral 1D"""
         try:
             # Obtener valores de la vista
-            valores = self.vista.obtener_valores_1d()
+            valores = self.vista_1d.obtener_valores_1d()
             func = valores['func']
             a = float(valores['a'])
             b = float(valores['b'])
@@ -40,7 +44,7 @@ class ControladorMonteCarlo:
             resultado, puntos = self.modelo.calcular_integral_1d(func, a, b, n)
             
             # Actualizar vista
-            self.vista.actualizar_grafico_1d(func, a, b, puntos)
+            self.vista_1d.actualizar_grafico_1d(func, a, b, puntos)
             self.mostrar_resultados_1d(resultado, puntos, func, a, b, n)
             
         except Exception as e:
@@ -50,7 +54,7 @@ class ControladorMonteCarlo:
         """Maneja el cálculo de integral 2D"""
         try:
             # Obtener valores de la vista
-            valores = self.vista.obtener_valores_2d()
+            valores = self.vista_2d.obtener_valores_2d()
             func = valores['func']
             ax = float(valores['ax'])
             bx = float(valores['bx'])
@@ -70,7 +74,7 @@ class ControladorMonteCarlo:
             resultado, puntos = self.modelo.calcular_integral_2d(func, ax, bx, cy, dy, n)
             
             # Actualizar vista
-            self.vista.actualizar_grafico_2d(func, ax, bx, cy, dy, puntos)
+            self.vista_2d.actualizar_grafico_2d(func, ax, bx, cy, dy, puntos)
             self.mostrar_resultados_2d(resultado, puntos, func, ax, bx, cy, dy, n)
             
         except Exception as e:
@@ -114,7 +118,7 @@ class ControladorMonteCarlo:
         
         texto += f"   Resultado: ({b-a}) × ({resultado/(b-a):.8f}) = {resultado:.8f}\n"
         
-        self.vista.mostrar_resultados(texto)
+        self.vista_1d.mostrar_resultados(texto)
     
     def mostrar_resultados_2d(self, resultado, puntos, func, ax, bx, cy, dy, n):
         """Formatea y muestra resultados para 2D"""
@@ -148,33 +152,33 @@ class ControladorMonteCarlo:
         
         texto += f"   Resultado: {area:.4f} × ({resultado/area:.8f}) = {resultado:.8f}\n"
         
-        self.vista.mostrar_resultados(texto)
+        self.vista_2d.mostrar_resultados(texto)
     
     def cargar_ejemplo_1d(self, func, a, b, n):
         """Carga un ejemplo en los campos 1D"""
-        self.vista.func_1d.delete(0, 'end')
-        self.vista.func_1d.insert(0, func)
-        self.vista.a_1d.delete(0, 'end')
-        self.vista.a_1d.insert(0, a)
-        self.vista.b_1d.delete(0, 'end')
-        self.vista.b_1d.insert(0, b)
-        self.vista.n_1d.delete(0, 'end')
-        self.vista.n_1d.insert(0, n)
+        self.vista_1d.func_1d.delete(0, 'end')
+        self.vista_1d.func_1d.insert(0, func)
+        self.vista_1d.a_1d.delete(0, 'end')
+        self.vista_1d.a_1d.insert(0, a)
+        self.vista_1d.b_1d.delete(0, 'end')
+        self.vista_1d.b_1d.insert(0, b)
+        self.vista_1d.n_1d.delete(0, 'end')
+        self.vista_1d.n_1d.insert(0, n)
     
     def cargar_ejemplo_2d(self, func, ax, bx, cy, dy, n):
         """Carga un ejemplo en los campos 2D"""
-        self.vista.func_2d.delete(0, 'end')
-        self.vista.func_2d.insert(0, func)
-        self.vista.ax_2d.delete(0, 'end')
-        self.vista.ax_2d.insert(0, ax)
-        self.vista.bx_2d.delete(0, 'end')
-        self.vista.bx_2d.insert(0, bx)
-        self.vista.cy_2d.delete(0, 'end')
-        self.vista.cy_2d.insert(0, cy)
-        self.vista.dy_2d.delete(0, 'end')
-        self.vista.dy_2d.insert(0, dy)
-        self.vista.n_2d.delete(0, 'end')
-        self.vista.n_2d.insert(0, n)
+        self.vista_2d.func_2d.delete(0, 'end')
+        self.vista_2d.func_2d.insert(0, func)
+        self.vista_2d.ax_2d.delete(0, 'end')
+        self.vista_2d.ax_2d.insert(0, ax)
+        self.vista_2d.bx_2d.delete(0, 'end')
+        self.vista_2d.bx_2d.insert(0, bx)
+        self.vista_2d.cy_2d.delete(0, 'end')
+        self.vista_2d.cy_2d.insert(0, cy)
+        self.vista_2d.dy_2d.delete(0, 'end')
+        self.vista_2d.dy_2d.insert(0, dy)
+        self.vista_2d.n_2d.delete(0, 'end')
+        self.vista_2d.n_2d.insert(0, n)
     
     def ejecutar(self):
         """Inicia la aplicación"""
